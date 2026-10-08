@@ -1,17 +1,327 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Videos de youtube</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        main {
+            flex: 1;
+            width: 100%;
+            padding: 30px;
+        }
+
+        /* ===== CONTENIDO: VIDEOS DE YOUTUBE ===== */
+        .videos {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .video {
+            background-color: #ffffff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
+        }
+
+        .video iframe {
+            display: block;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border: 0;
+            background-color: #000000;
+        }
+
+        .video h2 {
+            padding: 14px 16px 18px;
+            font-size: 1.05rem;
+            line-height: 1.4;
+            color: #1c2430;
+        }
+
+        /* ===== HEADER Y FOOTER (iguales a la página principal) ===== */
+        header,
+        footer {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        }
+
+        header {
+            position: relative;
+            z-index: 20;
+        }
+
+        /* ENCABEZADO: símbolo | título | menú */
+        .encabezado {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            padding: 24px 28px;
+            color: #ffffff;
+            background-color: #1e3a8a;
+            background-image:
+                radial-gradient(circle at 6% 130%, rgba(45, 212, 191, 0.6) 0, transparent 45%),
+                radial-gradient(circle at 94% -30%, rgba(244, 114, 182, 0.6) 0, transparent 45%),
+                radial-gradient(circle at 50% -40%, rgba(255, 255, 255, 0.18) 0, transparent 60%),
+                linear-gradient(120deg, #1e3a8a 0%, #4338ca 55%, #7c3aed 100%);
+            border-style: solid;
+            border-width: 0 0 4px;
+            border-image: linear-gradient(90deg, #2dd4bf, #facc15, #f472b6) 1;
+            box-shadow: 0 6px 20px rgba(67, 56, 202, 0.25);
+        }
+
+        .IPM {
+            justify-self: start;
+            height: 44px;
+            padding: 6px 10px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+        }
+
+        .IPM img {
+            display: block;
+            height: 100%;
+            width: auto;
+        }
+
+        .titulo {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+            text-align: center;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ===== MENÚ SIN JAVASCRIPT (checkbox oculto) ===== */
+        .menu {
+            justify-self: end;
+            position: relative;
+        }
+
+        .menu-check {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .menu-boton {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.16);
+            border: 1px solid rgba(255, 255, 255, 0.55);
+            border-radius: 8px;
+            cursor: pointer;
+            position: relative;
+            z-index: 11;
+        }
+
+        .menu-boton span {
+            display: block;
+            width: 20px;
+            height: 2px;
+            background: #ffffff;
+            border-radius: 2px;
+        }
+
+        .menu-boton:hover,
+        .menu-check:checked ~ .menu-boton,
+        .menu-check:focus-visible ~ .menu-boton {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: #ffffff;
+        }
+
+        /* Capa invisible: al hacer clic fuera del menú, se cierra */
+        .menu-cerrar {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9;
+            cursor: default;
+        }
+
+        .menu-lista {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            margin-top: 6px;
+            min-width: 220px;
+            background: #ffffff;
+            border: 1px solid #d9dee6;
+            border-radius: 8px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .menu-check:checked ~ .menu-lista,
+        .menu-check:checked ~ .menu-cerrar {
+            display: block;
+        }
+
+        .menu-lista a {
+            display: block;
+            padding: 10px 16px;
+            color: #1c2430;
+            text-decoration: none;
+        }
+
+        .menu-lista a:hover,
+        .menu-lista a:focus-visible {
+            background: #2563eb;
+            color: #ffffff;
+            outline: none;
+        }
+
+        /* FOOTER: botón a la izquierda, Facebook a la derecha, copyright abajo */
+        footer {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            row-gap: 14px;
+            padding: 16px 24px;
+            background: rgba(255, 255, 255, 0.9);
+            border-top: 1px solid #d9dee6;
+        }
+
+        .boton-nosotros {
+            justify-self: start;
+            display: inline-block;
+            padding: 10px 18px;
+            background: #2563eb;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 8px;
+        }
+
+        .boton-nosotros:hover,
+        .boton-nosotros:focus-visible {
+            background: #1d4ed8;
+            outline: none;
+        }
+
+        .facebook {
+            justify-self: end;
+            display: block;
+            line-height: 0;
+        }
+
+        .facebook svg {
+            height: 30px;
+            width: 30px;
+        }
+
+        .copyright {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #5b6573;
+        }
+
+        @media (max-width: 850px) {
+            .videos {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .encabezado { padding: 14px; }
+            .IPM { height: 38px; padding: 4px 8px; }
+            .titulo { font-size: 1.15rem; }
+            footer { padding: 14px; }
+            main { padding: 20px; }
+        }
+    </style>
 </head>
 <body>
-    <main>
-        <section>
-            <h1> Videos de youtube </h1>
-            <iframe width="958" height="482" src="https://www.youtube.com/embed/BJzOU4LdLEE" title="La NASA conmemora los desastres del Challenger y el Apolo I" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-            <iframe width="400" height="225" src="https://www.youtube.com/embed/B3WXAV2Sny8" title="El transbordador espacial Columbia - Las misiones de la NASA y sus incidentes más trágicos" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        </section>
-    </main>
+
+<header>
+    <div class="encabezado">
+
+        <!-- Símbolo a la izquierda -->
+        <div class="IPM">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDYLZVurXg2wsL7mxwpWQTPymNNERi_565d61Fb08Y7Q&s=10" alt="Logo" height="32">
+        </div>
+
+        <!-- Título en el centro -->
+        <h1 class="titulo">Videos de youtube</h1>
+
+        <!-- Menú desplegable a la derecha (sin JavaScript) -->
+        <div class="menu">
+            <input type="checkbox" id="menu-check" class="menu-check" aria-label="Abrir menú">
+            <label for="menu-check" class="menu-boton" title="Menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </label>
+            <label for="menu-check" class="menu-cerrar" aria-hidden="true"></label>
+            <div class="menu-lista" id="menu-lista">
+                <a href="formulario.html">Formulario de ingreso</a>
+                <a href="albumplantas.html">Álbum de plantas</a>
+                <a href="index.html">Inicio</a>
+                <a href="recetamilanesa.html">Receta de milanesa</a>
+                <a href="menudecafeteria.html">Menú de cafetería</a>
+            </div>
+        </div>
+
+    </div>
+</header>
+
+<main>
+    <section class="videos">
+
+        <article class="video">
+            <iframe src="https://www.youtube.com/embed/BJzOU4LdLEE" title="La NASA conmemora los desastres del Challenger y el Apolo I" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <h2>La NASA conmemora los desastres del Challenger y el Apolo I</h2>
+        </article>
+
+        <article class="video">
+            <iframe src="https://www.youtube.com/embed/B3WXAV2Sny8" title="El transbordador espacial Columbia - Las misiones de la NASA y sus incidentes más trágicos" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <h2>El transbordador espacial Columbia - Las misiones de la NASA y sus incidentes más trágicos</h2>
+        </article>
+
+    </section>
+</main>
+
+<footer>
+    <!-- Abajo a la izquierda: lleva a la página principal, donde aparece el cartel -->
+    <a class="boton-nosotros" href="index.html#sobre-nosotros">Sobre Nosotros</a>
+
+    <!-- Abajo a la derecha -->
+    <a class="facebook" href="https://www.facebook.com/?locale=es_LA" aria-label="Facebook">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+            <rect width="24" height="24" rx="5" fill="#1877f2"/>
+            <path fill="#ffffff" d="M16.6 24v-8.9h3l.5-3.6h-3.5V9.2c0-1 .3-1.7 1.8-1.7h1.9V4.3c-.3 0-1.4-.1-2.7-.1-2.7 0-4.5 1.6-4.5 4.6v2.7h-3v3.6h3V24h3.5z"/>
+        </svg>
+    </a>
+
+    <!-- Abajo de todo -->
+    <p class="copyright">&copy; 2026 Página Principal. Todos los derechos reservados.</p>
+</footer>
+
 </body>
 </html>

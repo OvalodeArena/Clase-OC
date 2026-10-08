@@ -1,24 +1,405 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulario de ingreso</title>
+  <style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: #1c2430;
+  background-color: #eef3fb;
+  background-image:
+    radial-gradient(circle at 12% 18%, rgba(37, 99, 235, 0.28) 0, transparent 40%),
+    radial-gradient(circle at 88% 12%, rgba(236, 72, 153, 0.22) 0, transparent 38%),
+    radial-gradient(circle at 80% 85%, rgba(20, 184, 166, 0.25) 0, transparent 42%),
+    radial-gradient(circle at 15% 90%, rgba(250, 204, 21, 0.22) 0, transparent 38%),
+    linear-gradient(160deg, #f4f7fd 0%, #e6eefb 100%);
+  background-attachment: fixed;
+}
+
+header {
+  position: relative;
+  z-index: 20;
+}
+
+/* ENCABEZADO: símbolo | título | menú */
+.encabezado {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 24px 28px;
+  color: #ffffff;
+  background-color: #1e3a8a;
+  background-image:
+    radial-gradient(circle at 6% 130%, rgba(45, 212, 191, 0.6) 0, transparent 45%),
+    radial-gradient(circle at 94% -30%, rgba(244, 114, 182, 0.6) 0, transparent 45%),
+    radial-gradient(circle at 50% -40%, rgba(255, 255, 255, 0.18) 0, transparent 60%),
+    linear-gradient(120deg, #1e3a8a 0%, #4338ca 55%, #7c3aed 100%);
+  border-style: solid;
+  border-width: 0 0 4px;
+  border-image: linear-gradient(90deg, #2dd4bf, #facc15, #f472b6) 1;
+  box-shadow: 0 6px 20px rgba(67, 56, 202, 0.25);
+}
+
+.IPM {
+  justify-self: start;
+  height: 44px;
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+}
+
+.IPM img {
+  display: block;
+  height: 100%;
+  width: auto;
+}
+
+.titulo {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-align: center;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* ===== MENÚ SIN JAVASCRIPT (checkbox oculto) ===== */
+.menu {
+  justify-self: end;
+  position: relative;
+}
+
+.menu-check {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.menu-boton {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 8px;
+  cursor: pointer;
+  position: relative;
+  z-index: 11;
+}
+
+.menu-boton span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: #ffffff;
+  border-radius: 2px;
+}
+
+.menu-boton:hover,
+.menu-check:checked ~ .menu-boton,
+.menu-check:focus-visible ~ .menu-boton {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: #ffffff;
+}
+
+/* Capa invisible: al hacer clic fuera del menú, se cierra */
+.menu-cerrar {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9;
+  cursor: default;
+}
+
+.menu-lista {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  margin-top: 6px;
+  min-width: 220px;
+  background: #ffffff;
+  border: 1px solid #d9dee6;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  z-index: 10;
+}
+
+.menu-check:checked ~ .menu-lista,
+.menu-check:checked ~ .menu-cerrar {
+  display: block;
+}
+
+.menu-lista a {
+  display: block;
+  padding: 10px 16px;
+  color: #1c2430;
+  text-decoration: none;
+}
+
+.menu-lista a:hover,
+.menu-lista a:focus-visible {
+  background: #2563eb;
+  color: #ffffff;
+  outline: none;
+}
+
+/* CONTENIDO */
+main {
+  flex: 1;
+  width: 100%;
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 0 24px;
+}
+
+/* FORMULARIO */
+.formulario {
+  max-width: 460px;
+  margin: 0 auto;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.88);
+  border-radius: 12px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.campo label {
+  font-weight: 600;
+}
+
+.campo input {
+  padding: 10px 12px;
+  font: inherit;
+  border: 1px solid #c9d1dc;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.campo input:focus-visible {
+  outline: 2px solid #2563eb;
+  border-color: #2563eb;
+}
+
+/* La casilla va a la izquierda de su texto */
+.campo-check {
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.campo-check input {
+  width: 18px;
+  height: 18px;
+  accent-color: #2563eb;
+}
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.boton {
+  padding: 10px 18px;
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  border: 2px solid #2563eb;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.boton-primario {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.boton-primario:hover,
+.boton-primario:focus-visible {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+  outline: none;
+}
+
+.boton-secundario {
+  background: #ffffff;
+  color: #2563eb;
+}
+
+.boton-secundario:hover,
+.boton-secundario:focus-visible {
+  background: #eaf1ff;
+  outline: none;
+}
+
+/* FOOTER: botón a la izquierda, Facebook a la derecha, copyright abajo */
+footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  row-gap: 14px;
+  padding: 16px 24px;
+  background: rgba(255, 255, 255, 0.9);
+  border-top: 1px solid #d9dee6;
+}
+
+.boton-nosotros {
+  justify-self: start;
+  display: inline-block;
+  padding: 10px 18px;
+  background: #2563eb;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 8px;
+}
+
+.boton-nosotros:hover,
+.boton-nosotros:focus-visible {
+  background: #1d4ed8;
+  outline: none;
+}
+
+.facebook {
+  justify-self: end;
+  display: block;
+  line-height: 0;
+}
+
+.facebook svg {
+  height: 30px;
+  width: 30px;
+}
+
+.copyright {
+  grid-column: 1 / -1;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #5b6573;
+}
+
+@media (max-width: 480px) {
+  .encabezado { padding: 14px; }
+  .IPM { height: 38px; padding: 4px 8px; }
+  .titulo { font-size: 1.15rem; }
+  main { margin: 24px auto; padding: 0 16px; }
+  .formulario { padding: 20px; }
+  footer { padding: 14px; }
+}
+  </style>
 </head>
 <body>
-    <main>
-        <label>Nombre:</label>
-        <input type="text" required><br>
-        <label>Contraseña:</label>
-        <input type="password" required><br>
-        <label>Edad:</label>
-        <input type="number" required><br>
-        <label>Aceptar condiciones</label>
-        <input type="checkbox" required><br>
-        <label>Fecha de nacimiento:</label>
-        <input type="date" required><br>
-        <button type="submit">Enviar datos</button><br>
-        <a href="index.html"><button type=button>Volver al index</button></a>
-    </main>
+
+  <header>
+    <div class="encabezado">
+
+      <!-- Símbolo a la izquierda -->
+      <div class="IPM">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDYLZVurXg2wsL7mxwpWQTPymNNERi_565d61Fb08Y7Q&s=10" alt="Logo" height="32">
+      </div>
+
+      <!-- Título en el centro -->
+      <h1 class="titulo">Formulario de ingreso</h1>
+
+      <!-- Menú desplegable a la derecha (sin JavaScript) -->
+      <div class="menu">
+        <input type="checkbox" id="menu-check" class="menu-check" aria-label="Abrir menú">
+        <label for="menu-check" class="menu-boton" title="Menú">
+          <span></span>
+          <span></span>
+          <span></span>
+        </label>
+        <label for="menu-check" class="menu-cerrar" aria-hidden="true"></label>
+        <div class="menu-lista" id="menu-lista">
+          <a href="index.html">Inicio</a>
+          <a href="videosdeyoutube.html">Videos de youtube</a>
+          <a href="albumplantas.html">Álbum de plantas</a>
+          <a href="recetamilanesa.html">Receta de milanesa</a>
+          <a href="menudecafeteria.html">Menú de cafetería</a>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <main>
+    <!-- Los campos van dentro de un <form> para que "required" y el botón Enviar funcionen.
+         Cambiá action="#" por la dirección que reciba los datos. -->
+    <form class="formulario" action="#" method="post">
+
+      <div class="campo">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" required>
+      </div>
+
+      <div class="campo">
+        <label for="contrasena">Contraseña:</label>
+        <input type="password" id="contrasena" name="contrasena" required>
+      </div>
+
+      <div class="campo">
+        <label for="edad">Edad:</label>
+        <input type="number" id="edad" name="edad" min="0" required>
+      </div>
+
+      <div class="campo campo-check">
+        <input type="checkbox" id="condiciones" name="condiciones" required>
+        <label for="condiciones">Aceptar condiciones</label>
+      </div>
+
+      <div class="campo">
+        <label for="nacimiento">Fecha de nacimiento:</label>
+        <input type="date" id="nacimiento" name="nacimiento" required>
+      </div>
+
+      <div class="acciones">
+        <button class="boton boton-primario" type="submit">Enviar datos</button>
+        <a class="boton boton-secundario" href="index.html">Volver al index</a>
+      </div>
+
+    </form>
+  </main>
+
+  <footer>
+    <!-- Abajo a la izquierda: lleva a la página principal, donde aparece el cartel -->
+    <a class="boton-nosotros" href="index.html#sobre-nosotros">Sobre Nosotros</a>
+
+    <!-- Abajo a la derecha -->
+    <a class="facebook" href="https://www.facebook.com/?locale=es_LA" aria-label="Facebook">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+        <rect width="24" height="24" rx="5" fill="#1877f2"/>
+        <path fill="#ffffff" d="M16.6 24v-8.9h3l.5-3.6h-3.5V9.2c0-1 .3-1.7 1.8-1.7h1.9V4.3c-.3 0-1.4-.1-2.7-.1-2.7 0-4.5 1.6-4.5 4.6v2.7h-3v3.6h3V24h3.5z"/>
+      </svg>
+    </a>
+
+    <!-- Abajo de todo -->
+    <p class="copyright">&copy; 2026 Página Principal. Todos los derechos reservados.</p>
+  </footer>
+
 </body>
 </html>

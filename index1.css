@@ -1,0 +1,132 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: #f5f7fa;
+  color: #1c2430;
+}
+
+/* ENCABEZADO: símbolo | título | menú */
+.encabezado {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 12px 24px;
+  background: #ffffff;
+  border-bottom: 1px solid #d9dee6;
+}
+
+/* Símbolo (izquierda): chico, 32px de alto */
+.IPM {
+  justify-self: start;
+  height: 32px;
+}
+
+.IPM img {
+  display: block;
+  height: 100%;
+  width: auto;
+}
+
+/* Título (centro) */
+.titulo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Menú (derecha) */
+.menu {
+  justify-self: end;
+  position: relative;
+}
+
+/* Botón cuadrado de 3 rayas */
+.menu-boton {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  background: #ffffff;
+  border: 1px solid #d9dee6;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.menu-boton span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: #1c2430;
+  border-radius: 2px;
+}
+
+.menu-boton:hover,
+.menu.abierto .menu-boton {
+  border-color: #2563eb;
+}
+
+.menu-lista {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  min-width: 220px;
+  background: #ffffff;
+  border: 1px solid #d9dee6;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  z-index: 10;
+}
+
+/* Se muestra cuando el JavaScript agrega la clase "abierto" */
+.menu.abierto .menu-lista {
+  display: block;
+}
+
+.menu-lista a {
+  display: block;
+  padding: 10px 16px;
+  color: #1c2430;
+  text-decoration: none;
+}
+
+.menu-lista a:hover,
+.menu-lista a:focus-visible {
+  background: #2563eb;
+  color: #ffffff;
+  outline: none;
+}
+
+main {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 0 24px;
+  line-height: 1.6;
+}
+
+footer {
+  padding: 16px 24px;
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .encabezado { padding: 10px 14px; }
+  .titulo { font-size: 1.1rem; }
+}
+
+/* Imagen de Facebook en el footer */
+footer img {
+  display: block;
+  height: 30px;
+  width: auto;
+  margin: 0 auto;
+}
